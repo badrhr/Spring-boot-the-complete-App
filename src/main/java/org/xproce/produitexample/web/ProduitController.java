@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.xproce.produitexample.dao.entities.Produit;
 import org.xproce.produitexample.metier.ProduitManager;
 
+import java.util.Arrays;
+
 @Controller
 public class ProduitController {
 
@@ -57,15 +59,10 @@ public class ProduitController {
                                @RequestParam(name = "page", defaultValue = "0") int page,
                                @RequestParam(name = "taille", defaultValue = "6") int taille,
                                @RequestParam(name = "search", defaultValue = "") String keyword
-    ) {
+                              ) {
         Page<Produit> produits = produitManager.searchProduits(keyword, page, taille);
         model.addAttribute("listProduits", produits.getContent());
         int[] pages = new int[produits.getTotalPages()];
-
-        for (int i = 0; i < pages.length; i++) {
-            pages[i] = i;
-        }
-        System.out.println(produits.getTotalPages());
         model.addAttribute("pages", pages);
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);

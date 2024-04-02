@@ -39,7 +39,7 @@
                 <td th:text="${p.getId()}"></td>
                 <td th:text="${p.getTitle()}"></td>
                 <td th:text="${p.getPrix()}"></td>
-                <td><a  onclick="confirm('Are you sur !!!')" th:href="@{deleteProduit(id=${p.getId()})}">
+                <td><a onclick="confirm('Are you sur !!!')" th:href="@{deleteProduit(id=${p.getId()})}">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class=" bi-trash"
                          viewBox="0 0 16 16">
@@ -61,7 +61,7 @@
 
 
         </table>
-        <div class="container" >
+        <div class="container">
             <ul class="nav nav-pills">
                 <li class="nav-item me-2" th:each="p, stat: ${pages}">
                     <a th:class="${stat.index} == ${page} ? 'btn btn-primary' : 'btn btn-outline-primary'"
