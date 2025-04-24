@@ -49,10 +49,11 @@ public class ProduitManagerMetier implements ProduitManager {
 
     @Override
     public boolean deleteProduit(Integer id) {
-        try {
+        Produit produit = produitRepository.findById(id).get();
+        if (produit != null) {
             produitRepository.deleteById(id);
             return true;
-        } catch (Exception exception) {
+        } else {
             return false;
         }
     }
