@@ -10,27 +10,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xproce.produitexample.dao.entities.Produit;
-import org.xproce.produitexample.metier.ProduitManager;
+import org.xproce.produitexample.service.ProduitService;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class ProduitController {
 
     @Autowired
-    ProduitManager produitManager;
+    ProduitService produitManager;
 
     @GetMapping("")
-    public String start() {
-        return "redirect:indexpage";
+    public String start(Model model ) {
+        List<Produit> produits = produitManager.getAllProduits();
+        model.addAttribute("listProduits", produits );
+
+        return "index";
+        //return "redirect:indexpage";
     }
 
     @PostMapping("/ajouter")
     public String ajouterProduitAction(Model model,
-                                 @RequestParam(name = "title") String title,
-                                 @RequestParam(name = "id", defaultValue =  "") Integer id,
-                                 @RequestParam(name = "designation") String designation,
-                                 @RequestParam(name = "prix") double prix) {
+                                       @RequestParam(name = "title") String title,
+                                       @RequestParam(name = "id", defaultValue = "") Integer id,
+                                       @RequestParam(name = "designation") String designation,
+                                       @RequestParam(name = "prix") double prix) {
         Produit produit = new Produit(id, title, designation, prix);
         produitManager.addProduit(produit);
         return "redirect:indexpage";
@@ -40,8 +44,8 @@ public class ProduitController {
     public String ajouterProduit(Model model,
                                  @Valid Produit produit,
                                  BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            return "ajouterproduit" ;
+        if (bindingResult.hasErrors()) {
+            return "ajouterproduit";
         }
         produitManager.addProduit(produit);
         return "redirect:indexpage";
@@ -59,10 +63,15 @@ public class ProduitController {
                                @RequestParam(name = "page", defaultValue = "0") int page,
                                @RequestParam(name = "taille", defaultValue = "6") int taille,
                                @RequestParam(name = "search", defaultValue = "") String keyword
-                              ) {
+    ) {
         Page<Produit> produits = produitManager.searchProduits(keyword, page, taille);
         model.addAttribute("listProduits", produits.getContent());
         int[] pages = new int[produits.getTotalPages()];
+
+        for (int i = 0; i < pages.length; i++) {
+            pages[i] = i;
+        }
+        System.out.println(produits.getTotalPages());
         model.addAttribute("pages", pages);
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
